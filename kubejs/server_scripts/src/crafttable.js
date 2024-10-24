@@ -961,7 +961,126 @@ ServerEvents.recipes(event => {
         A: 'minecraft:diamond',
         B: 'minecraft:stick'
     })
+    event.shaped(
+        Item.of('gtceu:cvd_factory', 1), [
+        "ABA",
+        "CDE",
+        "VVV"
+    ], {
+        A: '#gtceu:circuits/ev',
+        B: 'gtceu:polytetrafluoroethylene_huge_fluid_pipe',
+        C: 'gtceu:ev_conveyor_module',
+        E: 'gtceu:ev_electric_pump',
+        D: 'gtceu:ev_machine_hull',
+        V: 'gtceu:dense_stainless_steel_plate'
+    })
+    event.shaped(
+        Item.of('ars_nouveau:novice_spell_book', 1), [
+        " A ",
+        "CBD",
+        " E "
+    ], {
+        A: 'tetra:pristine_diamond',
+        B: 'minecraft:book',
+        C: 'tetra:pristine_emerald',
+        D: 'tetra:pristine_lapis',
+        E: 'botania:manasteel_ingot'
+    })
+    event.shaped(
+        Item.of('ctnhcore:coke_oven', 1), [
+        "GAG",
+        "DBD",
+        "GEG"
+    ], {
+        A: 'ctnhcore:coke_oven',
+        B: 'gtceu:iv_machine_hull',
+        D: 'gtceu:iv_electric_pump',
+        E: 'gtceu:dense_tungsten_steel_plate',
+        G: '#gtceu:circuits/luv'
+    })
+
+    event.shaped(
+        Item.of('jackseconomy:empty_exporter_manifest', 1), [
+          "ABA",
+          "CCC",
+          "CDC"
+        ], {
+        A: 'minecraft:red_carpet',
+        B: '#forge:chests',
+        C: 'minecraft:string',
+        D: 'minecraft:feather'
+    })
+
+    event.shaped(
+        Item.of('jackseconomy:empty_importer_manifest', 1), [
+          "CDC",
+          "CCC",
+          "ABA"
+        ], {
+        A: 'minecraft:red_carpet',
+        B: '#forge:chests',
+        C: 'minecraft:string',
+        D: 'minecraft:feather'
+    })
+
+    event.shaped(
+        Item.of('jackseconomy:golden_exporter_manifest', 1), [
+          "AAA",
+          "ABA",
+          "AAA"
+        ], {
+        A: 'gtceu:gold_foil',
+        B: 'jackseconomy:empty_exporter_manifest'
+    })
     
+    event.shaped(
+        Item.of('jackseconomy:mechanical_importer', 1), [
+          "ABA",
+          "BCB",
+          "ADA"
+        ], {
+        A: 'gtceu:gold_foil',
+        B: 'gtceu:steel_plate',
+        C: 'kubejs:heavy_machinery_casing',
+        D: 'create:cogwheel'
+    })
+
+    event.shaped(
+        Item.of('jackseconomy:mechanical_exporter', 1), [
+          "ADA",
+          "BCB",
+          "ABA"
+        ], {
+        A: 'gtceu:gold_foil',
+        B: 'gtceu:steel_plate',
+        C: 'kubejs:heavy_machinery_casing',
+        D: 'create:cogwheel'
+    })
+
+    event.shaped(
+        Item.of('jackseconomy:importer', 1), [
+          "ABA",
+          "BCB",
+          "ADA"
+        ], {
+        A: 'gtceu:gold_foil',
+        B: 'gtceu:steel_plate',
+        C: 'kubejs:heavy_machinery_casing',
+        D: 'gtceu:red_alloy_single_wire'
+    })
+
+    event.shaped(
+        Item.of('jackseconomy:exporter', 1), [
+          "ADA",
+          "BCB",
+          "ABA"
+        ], {
+        A: 'gtceu:gold_foil',
+        B: 'gtceu:steel_plate',
+        C: 'kubejs:heavy_machinery_casing',
+        D: 'gtceu:red_alloy_single_wire'
+    })
+
     event.shapeless("kubejs:platinum_metal_catalyst", ["kubejs:platinum_metal_catalyst_shard1", "kubejs:platinum_metal_catalyst_shard2"])
     event.shapeless(Item.of('alexscaves:cave_tablet', 1, '{CaveBiome:"alexscaves:primordial_caves"}').strongNBT(),Item.of('alexscaves:cave_tablet', 1, '{CaveBiome:"alexscaves:magnetic_caves"}').strongNBT())
     event.shapeless(Item.of('alexscaves:cave_tablet', 1, '{CaveBiome:"alexscaves:toxic_caves"}').strongNBT(),Item.of('alexscaves:cave_tablet', 1,'{CaveBiome:"alexscaves:primordial_caves"}').strongNBT())

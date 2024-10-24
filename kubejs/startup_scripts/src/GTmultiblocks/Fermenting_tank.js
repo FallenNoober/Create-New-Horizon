@@ -1,60 +1,9 @@
-GTCEuStartupEvents.registry('gtceu:recipe_type', event => {
-    GTRecipeTypes.register('fermenting', 'multiblock')
-        .setEUIO('in')
-        .setMaxIOSize(4, 4, 1, 1)
-        .setSlotOverlay(false, false, GuiTextures.SOLIDIFIER_OVERLAY)
-        .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW, FillDirection.LEFT_TO_RIGHT)
-        .setSound(GTSoundEntries.CHEMICAL)
-        .addDataInfo(data => {
-            return $LocalizationUtils.format("gtceu.recipe.temperature", $FormattingUtil.formatNumbers(data.getInt("ebf_temp")))
-        })
-        .addDataInfo(data => {
-            let requiredCoil = $ICoilType.getMinRequiredType(data.getInt("ebf_temp"))
-            if ($LDLib.isClient() && requiredCoil != null && requiredCoil.getMaterial() != null) {
-                return $LocalizationUtils.format("gtceu.recipe.coil.tier", $I18n.get(requiredCoil.getMaterial().getUnlocalizedName()))
-            }
-            return ""
-        })
-        .setUiBuilder((recipe, widgetGroup) => {
-            /**@param {$List_} items*/
-            let temp = recipe.data.getInt("ebf_temp");
-            let items = new $ArrayList()
-            items.add(GTCEuAPI.HEATING_COILS.entrySet().stream().filter(coil => coil.getKey().getCoilTemperature() >= temp).map(coil => new $ItemStack(coil.getValue().get())).toList());
-            widgetGroup.addWidget(new SlotWidget(new $CycleItemStackHandler(items), 0, widgetGroup.getSize().width - 25, widgetGroup.getSize().height - 32, false, false));
-        })
-})
 GTCEuStartupEvents.registry('gtceu:machine', event => {
-    event.create('fermenting_tank', 'multiblock', (holder) => new $CoilWorkableElectricMultiblockMachine(holder))
+    event.create('fermenting_tank', 'multiblock', (holder) => new $FermentingTankMachine(holder))
         .rotationState(RotationState.NON_Y_AXIS)
-        .recipeType('fermenting')
+        .recipeType("fermenting")
         .recipeModifier((/**@type {$MultiblockControllerMachine}*/machine,/**@type {$GTRecipe}*/recipe, params, result) => {
-            let efficiency = 1
-            machine.getParts().forEach((/** @type {$IMultiPart} */part) => {
-                part.getRecipeHandlers().forEach((/** @type {$IRecipeHandlerTrait} */trait) => {
-                    if (trait.getHandlerIO() == $IO.IN && trait.getCapability() == $FluidRecipeCapability.CAP) {
-                        trait.getContents().forEach((contents) => {
-                            if (contents instanceof $FluidStack) {
-                                let current = contents.getAmount()
-                                let total = part.getTankCapacity(part.INITIAL_TANK_CAPACITY_1X, part.self().definition.tier)
-                                let density = current / total
-                                let logistic = density - Math.pow(density, 2)
-                                efficiency *= logistic * 8
-                            }
-                        })
-                    }
-                })
-            })
-            let temperature = $Temperature.getTemperatureAt(machine.pos, machine.getLevel()) * 25
-            let newrecipe = recipe.copy()
-            if (temperature >= 36 && temperature <= 38) {
-                efficiency *= 1.2
-            }
-            else {
-                efficiency /= Math.min(3, Math.pow(Math.max(36 - temperature, temperature - 38), 2) / 10 + 1)
-            }
-            newrecipe.duration /= efficiency
-            machine.getHolder().self().persistentData.putFloat('growth_efficiency', efficiency)
-            return GTRecipeModifiers.ebfOverclock(machine, newrecipe, params, result)
+            return $FermentingTankMachine.recipeModifier(machine,recipe,params,result)
         })
         .appearanceBlock(GTBlocks.CASING_STEEL_SOLID)
         .pattern(definition => FactoryBlockPattern.start()
@@ -71,20 +20,116 @@ GTCEuStartupEvents.registry('gtceu:machine', event => {
             .where('B', Predicates.abilities(PartAbility.MUFFLER).setExactLimit(1))
             .where('A', Predicates.blocks(GTBlocks.CASING_STEEL_SOLID.get()).setMinGlobalLimited(15)
                 .or(Predicates.autoAbilities(definition.getRecipeTypes()))
+                .or(Predicates.abilities(PartAbility.IMPORT_FLUIDS).setExactLimit(1))
                 .or(Predicates.abilities(PartAbility.MAINTENANCE).setExactLimit(1))
             )
             .where('G', Predicates.blocks(GTBlocks.CASING_TEMPERED_GLASS.get()))
             .where(' ', Predicates.air())
             .build()
         )
-        .additionalDisplay((/** @type {$MetaMachine}*/machine, l) => {
-            if (machine.isFormed()) {
-                let temperature = Temperature.getTemperatureAt(machine.pos, machine.getLevel()) * 25
-                let efficiency = machine.getHolder().self().persistentData.getFloat('growth_efficiency')
-                l.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature", Text.of(machine.getCoilType().getCoilTemperature() + "K").red()))
-                l.add(l.size(), Text.translate('ctnh.fermenting_tank.growing_temperature', temperature.toFixed(1)).green())
-                l.add(l.size(), Text.translate('ctnh.fermenting_tank.growth_efficiency', (efficiency * 100).toFixed(1)))
-            }
+        .workableCasingRenderer('gtceu:block/casings/solid/machine_casing_solid_steel', 'gtceu:block/multiblock/implosion_compressor', false)
+
+        event.create('large_fermenting_tank', 'multiblock', (holder) => new $FermentingTankMachine(holder))
+        .rotationState(RotationState.NON_Y_AXIS)
+        .recipeType("fermenting")
+        .recipeModifier((/**@type {Internal.WorkableElectricMultiblockMachine}*/machine,/**@type {Internal.GTRecipe}*/recipe, params, result) => {
+            let newrecipe =  $FermentingTankMachine.recipeModifier(machine,recipe,params,result)
+            return GTRecipeModifiers.accurateParallel(machine,newrecipe,8,false).getFirst()
         })
+        .onWorking((/**@type {Internal.WorkableElectricMultiblockMachine} */machine) =>{
+            if(machine.getOffsetTimer() % 20 == 0){
+                let level = machine.getLevel()
+                let pos = machine.getPos()
+                let frontfacing = machine.getFrontFacing()
+                let pos1
+                if(frontfacing == Direction.NORTH){
+                    pos1 = pos.offset(13,0,1)
+                }
+                else if(frontfacing == Direction.SOUTH){
+                    pos1 = pos.offset(-13,0,-1)
+                }
+                else if(frontfacing == Direction.WEST){
+                    pos1 = pos.offset(1,0,-13)
+                }
+                else if(frontfacing == Direction.EAST){
+                    pos1 = pos.offset(-1,0,13)
+                }
+                if(level.getBlock(pos1).id != "gtceu:large_bottle"){
+                    return true;
+                }
+                let machine1 = $MetaMachine.getMachine(level,pos1)
+                if (machine1 instanceof $MultiblockTankMachine) {
+                    let /**@type {Internal.NotifiableFluidTank}*/ tank = machine1.getTank()
+                    if(tank.getFluidInTank(0).getFluid().equals(Fluid.of('minecraft:water').getFluid()) && tank.getFluidInTank(0).amount >= 100){
+                        tank.getFluidInTank(0).setAmount(tank.getFluidInTank(0).amount - 100)
+                        machine.holder.self().persistentData.putString("extra","water")
+                    }
+                    else if(tank.getFluidInTank(0).getFluid().equals(Fluid.of('gtceu:sterilized_growth_medium').getFluid()) && tank.getFluidInTank(0).amount >= 100){
+                        tank.getFluidInTank(0).setAmount(tank.getFluidInTank(0).amount - 100)
+                        machine.holder.self().persistentData.putString("extra","sterilized")
+                    }
+                    else if(tank.getFluidInTank(0).getFluid().equals(Fluid.of('gtceu:simple_growth_medium').getFluid()) && tank.getFluidInTank(0).amount >= 100){
+                        tank.getFluidInTank(0).setAmount(tank.getFluidInTank(0).amount - 100)
+                        machine.holder.self().persistentData.putString("extra","simple")
+                    }
+                    else{
+                        machine.holder.self().persistentData.putString("extra","null")
+                    }
+                }
+            }
+            return true
+        })
+        .appearanceBlock(GTBlocks.CASING_STEEL_SOLID)
+        .pattern(definition => FactoryBlockPattern.start()
+            .aisle("##########AAAAAAAAAAA", "##########ABBBBBBBBBA", "##########ABBBBBBBBBA", "##########AAAAAAAAAAA", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "############AAAAAAA##", "############AABBBAA##", "############AABBBAA##", "############AABBBAA##", "############AAAAAAA##") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "############CCCCCCC##", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "############CCCCCCC##", "###########DABBBBBAD#", "###########DB#####BD#", "###########DB#####BD#", "###########DB#####BD#", "###########DAAAAAAAD#") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "###########CCDAAADCC#", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "###########CCDAAADCC#", "##########AAABBBBBAAA", "##########ABB#####BBA", "##########ABB#####BBA", "##########ABB#####BBA", "##########AAAAAAAAAAA") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "###########CDAAAAADC#", "############DBBBBBD##", "############DBBBBBD##", "############DBBBBBD##", "############DFFFFFD##", "############DFFFFFD##", "############DBBBBBD##", "############DBBBBBD##", "############DBBBBBD##", "###########CDAAAAADC#", "##########ABBBBBBBBBA", "AAAAA#####A#########A", "ABBBA#####A#########A", "AAAAA#####A#########A", "##########AAAAAAAAAAA") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "###########CAAFFFAAC#", "#############B###B###", "#############B###B###", "#############B###B###", "#############F###F###", "#############F###F###", "#############B###B###", "#############B###B###", "#############B###B###", "###########CAAFFFAAC#", "##########ABBBBBBBBBA", "AHHHAAAAAAA#########B", "B###BBBBBBB#########B", "AAAAAAAAAAA#########B", "##########AAAAAAAAAAA") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "###########CAAFFFAAC#", "#############B#H#B###", "#############B#H#B###", "#############B#H#B###", "#############F#H#F###", "#############F#H#F###", "#############B#H#B###", "#############B#H#B###", "#############B#H#B###", "###########CAAFIFAAC#", "##########ABBBBBBBBBA", "AHHHBBBBBBB#########B", "B###################B", "AAAAABBBBBB#########B", "##########AAAAAAAAAAA") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "###########CAAFFFAAC#", "#############B###B###", "#############B###B###", "#############B###B###", "#############F###F###", "#############F###F###", "#############B###B###", "#############B###B###", "#############B###B###", "###########CAAFFFAAC#", "##########ABBBBBBBBBA", "AHHHAAAAAAA#########B", "B###BBBBBBB#########B", "AAAAAAAAAAA#########B", "##########AAAAAAAAAAA") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "###########CDAAAAADC#", "############DBBBBBD##", "############DBBBBBD##", "############DBBBBBD##", "############DFFFFFD##", "############DFFFFFD##", "############DBBBBBD##", "############DBBBBBD##", "############DBBBBBD##", "###########CDAAAAADC#", "##########ABBBBBBBBBA", "AAAAA#####A#########A", "ABBBA#####A#########A", "AAAAA#####A#########A", "##########AAAAAAAAAAA") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "###########CCDAAADCC#", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "#############D###D###", "###########CCDAAADCC#", "##########AAABBBBBAAA", "##########ABB#####BBA", "##########ABB#####BBA", "##########ABB#####BBA", "##########AAAAAAAAAAA") 
+            .aisle("##########AAAAAAAAAAA", "##########B#########B", "##########B#########B", "##########AAAAAAAAAAA", "############CCCCCCC##", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "############CCCCCCC##", "###########DABBBBBAD#", "###########DB#####BD#", "###########DB#####BD#", "###########DB#####BD#", "###########DAAAAAAAD#") 
+            .aisle("##########AJJJJ@JJJJA", "##########AJJJJJJJJJA", "##########AJJJJJJJJJA", "##########AJJJJJJJJJA", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "#####################", "############AAAAAAA##", "############AABBBAA##", "############AABBBAA##", "############AABBBAA##", "############AAAAAAA##") 
+            .where("#", Predicates.any())
+            .where("A", Predicates.blocks("gtceu:solid_machine_casing"))
+            .where("B", Predicates.blocks("gtceu:tempered_glass"))
+            .where("C", Predicates.blocks("create_connected:copycat_stairs"))
+            .where("D", Predicates.blocks("gtceu:invar_frame"))
+            .where("F", Predicates.heatingCoils())
+            .where("H", Predicates.blocks("gtceu:titanium_pipe_casing"))
+            .where("I", Predicates.blocks("gtceu:titanium_gearbox"))
+            .where("J", Predicates.blocks("gtceu:solid_machine_casing")
+                    .or(Predicates.autoAbilities(definition.getRecipeTypes()))
+                    .or(Predicates.abilities(PartAbility.MAINTENANCE).setExactLimit(1)))
+            .where("@", Predicates.controller(Predicates.blocks(definition.get())))
+            .build()
+        )
+        .workableCasingRenderer('gtceu:block/casings/solid/machine_casing_solid_steel', 'gtceu:block/multiblock/implosion_compressor', false)
+
+        event.create('large_bottle', 'multiblock', (holder) => new $MultiblockTankMachine(holder,10000*1000,null))
+        .rotationState(RotationState.NON_Y_AXIS)
+        .recipeType("dummy")
+        .appearanceBlock(GTBlocks.CASING_STEEL_SOLID)
+        .pattern(definition => FactoryBlockPattern.start()
+            .aisle("##AAAAA##", "##BBBBB##", "##BBBBB##", "##BBBBB##", "##CCCCC##", "##BBBBB##", "##BBBBB##", "##BBBBB##", "#########", "#########", "#########", "#########", "#########", "#########", "#########") 
+            .aisle("#AAAAAAA#", "#B#####B#", "#B#####B#", "#BAAAAAB#", "#C#####C#", "#B#####B#", "#B#####B#", "#B#####B#", "#BBBBBBB#", "###BBB###", "#########", "#########", "#########", "#########", "#########") 
+            .aisle("AAAAAAAAA", "B#######B", "B#######B", "BAAAAAAAB", "C#######C", "B#######B", "B#######B", "B#######B", "#B#####B#", "##BBBBB##", "###CCC###", "###BBB###", "###BBB###", "###BBB###", "###AAA###") 
+            .aisle("AAAAAAAAA", "B#######B", "B#######B", "BAAAAAAAB", "C#######C", "B#######B", "B#######B", "B#######B", "#B#####B#", "#BB###BB#", "##CDDDC##", "##B###B##", "##B###B##", "##B###B##", "##AEEEA##") 
+            .aisle("AAAAAAAAA", "B###E###B", "B###E###B", "BAAAEAAAB", "C###E###C", "B###E###B", "B###E###B", "B###E###B", "#B##E##B#", "#BB#E#BB#", "##CDEDC##", "##B###B##", "##B###B##", "##B###B##", "##AEEEA##") 
+            .aisle("AAAAAAAAA", "B#######B", "B#######B", "BAAAAAAAB", "C#######C", "B#######B", "B#######B", "B#######B", "#B#####B#", "#BB###BB#", "##CDDDC##", "##B###B##", "##B###B##", "##B###B##", "##AEEEA##") 
+            .aisle("AAAAAAAAA", "B#######B", "B#######B", "BAAAAAAAB", "C#######C", "B#######B", "B#######B", "B#######B", "#B#####B#", "##BBBBB##", "###CCC###", "###BBB###", "###BBB###", "###BBB###", "###AAA###") 
+            .aisle("#AAAAAAA#", "#B#####B#", "#B#####B#", "#BAAAAAB#", "#C#####C#", "#B#####B#", "#B#####B#", "#B#####B#", "#BBBBBBB#", "###BBB###", "#########", "#########", "#########", "#########", "#########") 
+            .aisle("##AA@AA##", "##BBBBB##", "##BBBBB##", "##BBBBB##", "##CCCCC##", "##BBBBB##", "##BBBBB##", "##BBBBB##", "#########", "#########", "#########", "#########", "#########", "#########", "#########") 
+            .where("#", Predicates.any())
+            .where("A", Predicates.blocks("gtceu:solid_machine_casing"))
+            .where("B", Predicates.blocks("gtceu:tempered_glass"))
+            .where("C", Predicates.blocks("gtceu:cupronickel_coil_block"))
+            .where("D", Predicates.blocks("gtceu:filter_casing"))
+            .where("E", Predicates.blocks("gtceu:titanium_pipe_casing"))
+            .where("@", Predicates.controller(Predicates.blocks(definition.get())))
+            .build()
+        )
         .workableCasingRenderer('gtceu:block/casings/solid/machine_casing_solid_steel', 'gtceu:block/multiblock/implosion_compressor', false)
 })
