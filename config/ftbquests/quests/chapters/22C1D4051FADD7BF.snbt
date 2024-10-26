@@ -1,0 +1,673 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "22C1D4051FADD7BF"
+	group: ""
+	icon: "ytech:shell_beads"
+	id: "22C1D4051FADD7BF"
+	order_index: 1
+	quest_links: [ ]
+	quests: [
+		{
+			dependencies: ["65D7F599DAAB612E"]
+			id: "249BCB0E5B6DD513"
+			tasks: [{
+				id: "623F1026B9556ADE"
+				item: {
+					Count: 1
+					id: "ytech:sharp_flint"
+					tag: {
+						Damage: 0
+					}
+				}
+				type: "item"
+			}]
+			x: -0.5d
+			y: -2.0d
+		}
+		{
+			id: "65D7F599DAAB612E"
+			rewards: [
+				{
+					id: "0575989BD6919719"
+					item: "sereneseasons:calendar"
+					type: "item"
+				}
+				{
+					id: "56410B8641EBC171"
+					item: "legendarysurvivaloverhaul:heart_fruit"
+					type: "item"
+				}
+				{
+					count: 4
+					id: "27A15FF620E571AB"
+					item: "legendarysurvivaloverhaul:water_plant_bag"
+					type: "item"
+				}
+				{
+					id: "10CBED05F089C580"
+					item: "minecraft:flint"
+					type: "item"
+				}
+				{
+					id: "3DDC5767F3392D26"
+					item: "legendarysurvivaloverhaul:healing_herbs"
+					type: "item"
+				}
+				{
+					id: "4DB09B21A70E9D42"
+					item: "legendarysurvivaloverhaul:sun_fern_seeds"
+					type: "item"
+				}
+				{
+					id: "362E1B54C41122EF"
+					item: "legendarysurvivaloverhaul:ice_fern_seeds"
+					type: "item"
+				}
+			]
+			shape: "gear"
+			size: 3.0d
+			subtitle: "本整合包目前处于内测状态，许多机制未完善，请酌情游玩，如有建议欢迎提出"
+			tasks: [{
+				id: "2C82B7EFE526DE53"
+				title: "欢迎"
+				type: "checkmark"
+			}]
+			x: -0.5d
+			y: -4.0d
+		}
+		{
+			dependencies: ["249BCB0E5B6DD513"]
+			id: "2005B89F788DA0ED"
+			tasks: [{
+				id: "07A25ADDB46C24F1"
+				item: "farmersdelight:straw"
+				type: "item"
+			}]
+			x: -0.5d
+			y: -0.5d
+		}
+		{
+			dependencies: ["14BC2F324C345E81"]
+			id: "18F86298C4DC44A6"
+			tasks: [{
+				id: "6ADF738C10FC50D5"
+				item: "charcoal_pit:straw"
+				type: "item"
+			}]
+			x: -2.5d
+			y: 11.0d
+		}
+		{
+			dependencies: ["11F6C38722346420"]
+			id: "14BC2F324C345E81"
+			tasks: [{
+				id: "394D8DC73AA0ABED"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "ytech:drying_racks"
+					}
+				}
+				title: "Any #ytech:drying_racks"
+				type: "item"
+			}]
+			title: "晾干架"
+			x: -2.5d
+			y: 3.5d
+		}
+		{
+			dependencies: ["65A1E4544420CAA2"]
+			dependency_requirement: "all_started"
+			id: "11F6C38722346420"
+			tasks: [{
+				id: "6E56AF114A5F82ED"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "minecraft:logs"
+					}
+				}
+				title: "Any #minecraft:logs"
+				type: "item"
+			}]
+			x: -0.5d
+			y: 3.5d
+		}
+		{
+			dependency_requirement: "all_started"
+			id: "5F665FA100021D5C"
+			tasks: [
+				{
+					id: "28E1B552E8E4B693"
+					item: {
+						Count: 1
+						id: "itemfilters:tag"
+						tag: {
+							value: "forge:cobblestone"
+						}
+					}
+					title: "Any #forge:cobblestone"
+					type: "item"
+				}
+				{
+					id: "0703071D7783B105"
+					item: {
+						Count: 1
+						id: "itemfilters:tag"
+						tag: {
+							value: "forge:stone"
+						}
+					}
+					title: "Any #forge:stone"
+					type: "item"
+				}
+			]
+			x: 10.0d
+			y: 13.5d
+		}
+		{
+			dependencies: ["11F6C38722346420"]
+			id: "3A63AC9CC2C43915"
+			tasks: [{
+				id: "520D6A9F1E563A99"
+				item: "charcoal_pit:log_pile"
+				type: "item"
+			}]
+			x: -0.5d
+			y: 5.5d
+		}
+		{
+			dependencies: ["11F6C38722346420"]
+			id: "545E83336F554C03"
+			tasks: [{
+				id: "1800C43FF55F2069"
+				item: {
+					Count: 1
+					id: "itemfilters:tag"
+					tag: {
+						value: "ytech:tanning_racks"
+					}
+				}
+				title: "Any #ytech:tanning_racks"
+				type: "item"
+			}]
+			x: 2.5d
+			y: 3.5d
+		}
+		{
+			dependencies: [
+				"545E83336F554C03"
+				"2E32F5CA5C6CCCDE"
+			]
+			id: "49247833ECF29AC7"
+			tasks: [{
+				id: "0AECDC64C5F2B819"
+				item: "minecraft:leather"
+				type: "item"
+			}]
+			x: 2.5d
+			y: 5.0d
+		}
+		{
+			id: "2E32F5CA5C6CCCDE"
+			tasks: [{
+				id: "0D7F9B87B135B29D"
+				item: "ytech:raw_hide"
+				type: "item"
+			}]
+			x: 4.0d
+			y: 5.0d
+		}
+		{
+			dependencies: ["2005B89F788DA0ED"]
+			id: "03076F23AFCCBDFF"
+			tasks: [{
+				id: "06436F29D749E6C0"
+				item: "farmersdelight:rope"
+				type: "item"
+			}]
+			x: -0.5d
+			y: 0.5d
+		}
+		{
+			dependencies: ["49247833ECF29AC7"]
+			id: "3FABDF117E5AB77B"
+			tasks: [{
+				id: "35A158D84079BE20"
+				item: "ytech:leather_strips"
+				type: "item"
+			}]
+			x: 2.5d
+			y: 6.5d
+		}
+		{
+			dependencies: ["03076F23AFCCBDFF"]
+			id: "65A1E4544420CAA2"
+			tasks: [{
+				id: "453E081793536F5F"
+				item: {
+					Count: 1
+					id: "gtceu:flint_axe"
+					tag: {
+						DisallowContainerItem: 0b
+						GT.Behaviours: {
+							DisableShields: 1b
+							TreeFelling: 1b
+						}
+						GT.Tool: {
+							Damage: 0
+							HarvestLevel: 2
+							MaxDamage: 63
+							ToolSpeed: 3.5f
+						}
+						HideFlags: 2
+					}
+				}
+				type: "item"
+			}]
+			x: -0.5d
+			y: 1.5d
+		}
+		{
+			dependencies: ["3FABDF117E5AB77B"]
+			id: "133D39E0D6C29DBD"
+			tasks: [{
+				id: "308C22EED667BE0F"
+				item: {
+					Count: 1
+					id: "ytech:flint_spear"
+					tag: {
+						Damage: 0
+					}
+				}
+				type: "item"
+			}]
+			x: 2.5d
+			y: 8.0d
+		}
+		{
+			dependencies: ["3FABDF117E5AB77B"]
+			id: "6AD36846C842B7ED"
+			tasks: [{
+				id: "761A45783DC6C984"
+				item: {
+					Count: 1
+					id: "gtceu:flint_pickaxe"
+					tag: {
+						DisallowContainerItem: 0b
+						GT.Behaviours: {
+							TorchPlacing: 1b
+						}
+						GT.Tool: {
+							Damage: 0
+							HarvestLevel: 2
+							MaxDamage: 63
+							ToolSpeed: 5.5f
+						}
+						HideFlags: 2
+					}
+				}
+				type: "item"
+			}]
+			x: 3.5d
+			y: 8.0d
+		}
+		{
+			dependencies: ["3FABDF117E5AB77B"]
+			id: "5B5B09C82E52B644"
+			tasks: [{
+				id: "0426FF7C42E5873E"
+				item: {
+					Count: 1
+					id: "gtceu:flint_shovel"
+					tag: {
+						DisallowContainerItem: 0b
+						GT.Behaviours: { }
+						GT.Tool: {
+							Damage: 0
+							HarvestLevel: 2
+							MaxDamage: 63
+							ToolSpeed: 5.5f
+						}
+						HideFlags: 2
+					}
+				}
+				type: "item"
+			}]
+			x: 1.5d
+			y: 8.0d
+		}
+		{
+			id: "224E3A47D3EEA7DA"
+			tasks: [{
+				id: "20FD34F39FC2B52E"
+				item: "charcoal_pit:fire_starter"
+				type: "item"
+			}]
+			x: 1.0d
+			y: 5.5d
+		}
+		{
+			dependencies: [
+				"13B9210120A1D806"
+				"2E314432ECD8B1AB"
+			]
+			id: "5343052CAD078431"
+			tasks: [{
+				id: "4CB050D541BAAEC7"
+				item: "minecraft:charcoal"
+				type: "item"
+			}]
+			x: -1.0d
+			y: 11.0d
+		}
+		{
+			dependencies: [
+				"3A63AC9CC2C43915"
+				"224E3A47D3EEA7DA"
+			]
+			id: "13B9210120A1D806"
+			subtitle: "将原木堆放进挖好的坑里，点火，封顶，等到粒子效果消失再挖开"
+			tasks: [{
+				id: "0C35F9767512B9F1"
+				title: "木炭坑"
+				type: "checkmark"
+			}]
+			x: -0.5d
+			y: 7.0d
+		}
+		{
+			dependencies: ["6AD36846C842B7ED"]
+			id: "4C69BB5426E4057D"
+			subtitle: "煤炭确实有，但不纯，浪费和污染都很大"
+			tasks: [{
+				id: "6BFC387E17E88171"
+				item: "gtceu:raw_coal"
+				type: "item"
+			}]
+			x: 3.5d
+			y: 11.0d
+		}
+		{
+			description: [
+				"放火烧山"
+				"牢底坐穿"
+			]
+			id: "2E314432ECD8B1AB"
+			subtitle: "全新的火焰燃烧和蔓延机制，一见难忘"
+			tasks: [{
+				id: "3A92B28EF80F3F4C"
+				title: "火灾"
+				type: "checkmark"
+			}]
+			x: -1.5d
+			y: 7.0d
+		}
+		{
+			id: "33C79DA9D04758D1"
+			tasks: [{
+				id: "3FBC0DA9E8ECA9C3"
+				item: "minecraft:clay_ball"
+				type: "item"
+			}]
+			x: -5.5d
+			y: 3.5d
+		}
+		{
+			dependencies: ["33C79DA9D04758D1"]
+			id: "61CFDCAB24531A8E"
+			tasks: [{
+				id: "6FF7C2973E1A2EF8"
+				item: "gtceu:compressed_clay"
+				type: "item"
+			}]
+			x: -6.0d
+			y: 9.0d
+		}
+		{
+			dependencies: ["33C79DA9D04758D1"]
+			id: "0E3F5E21D70A130F"
+			tasks: [{
+				id: "3FA774C257F4A7AE"
+				item: "charcoal_pit:clay_pot"
+				type: "item"
+			}]
+			x: -5.0d
+			y: 11.0d
+		}
+		{
+			id: "135E050B4567A91C"
+			tasks: [{
+				id: "6FAB479DF843DBED"
+				item: "charcoal_pit:unfired_brick"
+				type: "item"
+			}]
+			x: -10.5d
+			y: 6.5d
+		}
+		{
+			id: "2D5ACBA177D3026F"
+			tasks: [{
+				id: "578256A6E3ED2A56"
+				item: "gtceu:compressed_coke_clay"
+				type: "item"
+			}]
+			x: -4.5d
+			y: 6.0d
+		}
+		{
+			dependencies: ["61CFDCAB24531A8E"]
+			id: "51153D83025B5D2F"
+			tasks: [{
+				id: "42EBE21AAB9510D9"
+				item: "minecraft:brick"
+				type: "item"
+			}]
+			x: -6.0d
+			y: 11.0d
+		}
+		{
+			dependencies: ["28FF9E0409E2CAC4"]
+			id: "4E38097B3CB0AC71"
+			tasks: [{
+				id: "4869050CB446DE9A"
+				item: "minecraft:copper_ingot"
+				type: "item"
+			}]
+			x: -4.5d
+			y: 13.5d
+		}
+		{
+			dependencies: ["28FF9E0409E2CAC4"]
+			id: "2F1FF0A3C4857952"
+			tasks: [{
+				id: "04C1CEB6B1D1E75E"
+				item: "gtceu:tin_ingot"
+				type: "item"
+			}]
+			x: -2.5d
+			y: 13.5d
+		}
+		{
+			dependencies: [
+				"4E38097B3CB0AC71"
+				"2F1FF0A3C4857952"
+			]
+			id: "1929ECEB56DE8E63"
+			tasks: [{
+				id: "58530CEB44D1FD46"
+				item: "gtceu:bronze_ingot"
+				type: "item"
+			}]
+			x: -3.5d
+			y: 14.5d
+		}
+		{
+			dependencies: [
+				"0E3F5E21D70A130F"
+				"18F86298C4DC44A6"
+			]
+			id: "28FF9E0409E2CAC4"
+			tasks: [{
+				id: "2F1D0DBE535E5257"
+				title: "矿窑"
+				type: "checkmark"
+			}]
+			x: -3.5d
+			y: 12.5d
+		}
+		{
+			dependencies: ["5C1A45DB06CCD336"]
+			id: "23C0D5EB4E6126F3"
+			tasks: [{
+				id: "1AD57F43E803C60A"
+				item: "charcoal_pit:sandy_brick_item"
+				type: "item"
+			}]
+			x: -8.5d
+			y: 9.0d
+		}
+		{
+			id: "64EE9D86DD3E3391"
+			tasks: [{
+				id: "02DB4951179301DF"
+				item: {
+					Count: 1
+					id: "ytech:brick_mold"
+					tag: {
+						Damage: 0
+					}
+				}
+				type: "item"
+			}]
+			x: -7.0d
+			y: 6.0d
+		}
+		{
+			dependencies: ["64EE9D86DD3E3391"]
+			id: "5C1A45DB06CCD336"
+			tasks: [{
+				id: "2BC1EA567F861AF1"
+				item: "charcoal_pit:unfired_sandy_brick"
+				type: "item"
+			}]
+			x: -7.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["23C0D5EB4E6126F3"]
+			id: "03576492CF39BFB6"
+			tasks: [{
+				id: "0BFA429CD67A0D81"
+				item: "charcoal_pit:sandy_tuyere"
+				type: "item"
+			}]
+			x: -9.5d
+			y: 11.5d
+		}
+		{
+			dependencies: ["23C0D5EB4E6126F3"]
+			id: "53C230A2CBFCF2EC"
+			tasks: [{
+				id: "531EBDE6D677CECC"
+				item: "charcoal_pit:sandy_brick"
+				type: "item"
+			}]
+			x: -7.5d
+			y: 11.5d
+		}
+		{
+			dependencies: ["23C0D5EB4E6126F3"]
+			id: "626AD761BB6A23B1"
+			tasks: [{
+				id: "56E8A82BC646A9BB"
+				item: "charcoal_pit:main_bloomery"
+				type: "item"
+			}]
+			x: -8.5d
+			y: 11.5d
+		}
+		{
+			id: "2CC215AB93946A51"
+			tasks: [{
+				id: "02D30AF615E4317F"
+				item: "charcoal_pit:bellows"
+				type: "item"
+			}]
+			x: -11.5d
+			y: 11.5d
+		}
+		{
+			dependencies: [
+				"53C230A2CBFCF2EC"
+				"626AD761BB6A23B1"
+				"03576492CF39BFB6"
+				"2CC215AB93946A51"
+			]
+			id: "5D22B9775D03496B"
+			tasks: [{
+				id: "3D8475839642CEF9"
+				title: "熟铁吹炼炉"
+				type: "checkmark"
+			}]
+			x: -9.5d
+			y: 13.5d
+		}
+		{
+			dependencies: ["5D22B9775D03496B"]
+			id: "37197288780BA12A"
+			tasks: [{
+				id: "71B181BC406E1C7A"
+				item: "minecraft:iron_ingot"
+				type: "item"
+			}]
+			x: -10.0d
+			y: 14.5d
+		}
+		{
+			dependencies: ["5D22B9775D03496B"]
+			id: "25CFA97770720806"
+			tasks: [{
+				id: "490A4AFFE4905A9F"
+				item: "gtceu:nickel_ingot"
+				type: "item"
+			}]
+			x: -9.0d
+			y: 14.5d
+		}
+		{
+			dependencies: ["65D7F599DAAB612E"]
+			icon: {
+				Count: 1
+				id: "minecraft:stone_pickaxe"
+				tag: {
+					Damage: 0
+				}
+			}
+			id: "5D75423E68C0AFC4"
+			subtitle: "木头石头什么的，禁用了喵"
+			tasks: [{
+				id: "32743CFDCEF99821"
+				type: "checkmark"
+			}]
+			title: "木/石工具？"
+			x: 0.5d
+			y: -2.0d
+		}
+		{
+			dependencies: ["37197288780BA12A"]
+			id: "08231D4915F09533"
+			tasks: [{
+				id: "0BEF89E833744315"
+				item: "legendarysurvivaloverhaul:canteen"
+				type: "item"
+			}]
+			x: -12.5d
+			y: 16.5d
+		}
+	]
+	title: "仰望星空的古猿"
+}
